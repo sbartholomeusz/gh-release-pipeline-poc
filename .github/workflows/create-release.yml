@@ -1,6 +1,9 @@
-name: Build, test and create a new app release
+name: Create release
 
 on:
+  # Run workflow manually
+  workflow_dispatch:
+    
   push:
     branches:
       - main
@@ -8,9 +11,6 @@ on:
 defaults:
   run:
     working-directory: ./src
-
-env:
-  GH_ACCOUNT_NAME: 'sbartholomeusz'
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-          source-url: https://nuget.pkg.github.com/${{ env.GH_ACCOUNT_NAME }}/index.json
+          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
 
       - uses: actions/cache@v3
         with:
