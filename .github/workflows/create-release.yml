@@ -3,7 +3,7 @@ name: Create release
 on:
   # Run workflow manually
   workflow_dispatch:
-    
+
   push:
     branches:
       - main
@@ -11,6 +11,9 @@ on:
 defaults:
   run:
     working-directory: ./src
+
+env:
+  NUGET_AUTH_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
 
 jobs:
   build:
