@@ -51,6 +51,7 @@ jobs:
         run: dotnet test --configuration Release --no-build
           
   package:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Setup dotnet
@@ -83,6 +84,7 @@ jobs:
       #  run: dotnet pack --output ${{env.NUGET_PACKAGE_PATH}} --configuration Release --no-build --no-restore
 
   publish:
+    needs: package
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifacts
