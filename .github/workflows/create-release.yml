@@ -9,6 +9,9 @@ defaults:
   run:
     working-directory: ./src
 
+env:
+  GH_ACCOUNT_NAME: 'sbartholomeusz'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+          source-url: https://nuget.pkg.github.com/${{ env.GH_ACCOUNT_NAME }}/index.json
 
       - uses: actions/cache@v3
         with:
