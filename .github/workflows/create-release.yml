@@ -63,5 +63,14 @@ jobs:
       - name: Package
         run: dotnet pack --output ${{env.NUGET_PACKAGE_PATH}} --configuration Release --no-build --no-restore
 
+      - name: Debug
+        run: |
+          pwd
+          echo 1
+          ls -l
+          echo 2
+          ls ${{env.NUGET_PACKAGE_PATH}} -l
+          echo 3
+
       - name: Publish
         run: dotnet nuget push ${{env.NUGET_PACKAGE_PATH}}/*.nupkg
