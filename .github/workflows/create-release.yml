@@ -1,4 +1,4 @@
-name: Create release
+name: create-release
 
 on:
   # Run workflow manually
@@ -13,7 +13,7 @@ defaults:
     working-directory: ./src
 
 env:
-  NUGET_AUTH_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+  NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
