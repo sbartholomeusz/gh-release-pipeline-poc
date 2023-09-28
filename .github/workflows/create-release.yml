@@ -10,30 +10,51 @@ on:
 
 defaults:
   run:
+    shell: bash
     working-directory: ./src
 
 env:
-  NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  DOTNET_VERSION: '7.0.x'
+  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GH_ACCOUNT_NAME: ${{ github.repository_owner }}
   NUGET_PACKAGE_PATH: './nupkg'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: [ '7.0.x' ]
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Deploy package to github
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-          source-url: https://nuget.pkg.github.com/${{ env.GH_ACCOUNT_NAME }}/index.json
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          #source-url: https://nuget.pkg.github.com/${{ env.GH_ACCOUNT_NAME }}/index.json
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+          
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          #source-url: https://nuget.pkg.github.com/${{ env.GH_ACCOUNT_NAME }}/index.json
 
       - uses: actions/cache@v3
         with:
@@ -46,31 +67,33 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+      - name: Publish
+        run: dotnet publish --output ./publish --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
-
-      - name: Upload test results
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: dotnet-results-${{ matrix.dotnet-version }}
-          path: TestResults-${{ matrix.dotnet-version }}
-        # Use always() to always run this step to publish test results when there are test failures
-        if: ${{ always() }}
+          name: release-package
+          path: ./publish
 
-      - name: Package
-        run: dotnet pack --output ${{env.NUGET_PACKAGE_PATH}} --configuration Release --no-build --no-restore
+      #- name: Package
+      #  run: dotnet pack --output ${{env.NUGET_PACKAGE_PATH}} --configuration Release --no-build --no-restore
 
-      - name: Debug
-        run: |
-          pwd
-          echo 1
-          ls -l
-          echo 2
-          ls ${{env.NUGET_PACKAGE_PATH}} -l
-          echo 3
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: release-package
+          path: ./release-package
 
-      - name: Publish
-        run: dotnet nuget push ${{env.NUGET_PACKAGE_PATH}}/*.nupkg
+      - name: Set release version
+        id: versioner
+        run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
+        shell: pwsh
+
+      - name: Publish release
+        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} --draft --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
