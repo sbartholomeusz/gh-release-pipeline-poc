@@ -78,12 +78,26 @@ jobs:
       - name: Publish
         run: dotnet publish --configuration Release --no-restore
 
+      - name: Debug
+        run: |
+          pwd
+          echo 1
+          ls -l
+          echo 2
+          ls ./bin/ -l
+          echo 3
+          ls ./bin/Release/ -l
+          echo 4
+          ls ./bin/Release/net7.0 -l
+          echo 5
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: hello-world-package
           path: ./bin/Release/net7.0
           if-no-files-found: error
+          retention-days: 7
 
       #- name: Package
       #  run: dotnet pack --output ${{env.NUGET_PACKAGE_PATH}} --configuration Release --no-build --no-restore
