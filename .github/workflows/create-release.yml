@@ -18,7 +18,6 @@ env:
   GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GH_ACCOUNT_NAME: ${{ github.repository_owner }}
-  NUGET_PACKAGE_PATH: './nupkg'
 
 jobs:
   test:
@@ -53,6 +52,8 @@ jobs:
   package:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      NUGET_PACKAGE_PATH: './nupkg'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -75,13 +76,14 @@ jobs:
         run: dotnet restore
 
       - name: Publish
-        run: dotnet publish --output ./publish --configuration Release --no-restore
+        run: dotnet publish --configuration Release --no-restore
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: release-package
-          path: ./publish
+          name: hello-world-package
+          path: ./bin/Release/net7.0
+          if-no-files-found: error
 
       #- name: Package
       #  run: dotnet pack --output ${{env.NUGET_PACKAGE_PATH}} --configuration Release --no-build --no-restore
@@ -89,12 +91,14 @@ jobs:
   publish:
     needs: package
     runs-on: ubuntu-latest
+    env:
+      RELEASE_DIR: './hello-world-package'
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: release-package
-          path: ./release-package
+          name: hello-world-package
+          path: ${{env.RELEASE_DIR}}
 
       - name: Set release version
         id: versioner
@@ -102,6 +106,6 @@ jobs:
         shell: pwsh
 
       - name: Publish release
-        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} --draft --generate-notes
+        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_DIR}}/*.* --draft --generate-notes
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
