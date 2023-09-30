@@ -115,7 +115,6 @@ jobs:
       - name: Set release version
         id: versioner
         run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
-        shell: pwsh
 
       - name: Publish release
         run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_DIR}}/* --draft --generate-notes
