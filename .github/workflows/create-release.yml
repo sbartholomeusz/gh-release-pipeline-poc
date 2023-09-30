@@ -76,7 +76,7 @@ jobs:
         run: dotnet restore
 
       - name: Publish
-        run: dotnet publish --configuration Release --no-restore
+        run: dotnet publish ./hello-world.csproj --configuration Release --no-restore --output ${{ github.workspace }}/publish
 
       - name: Debug
         run: |
@@ -84,18 +84,15 @@ jobs:
           echo 1
           ls -l
           echo 2
-          ls ./bin/ -l
+          ls ${{ github.workspace }} -l
           echo 3
-          ls ./bin/Release/ -l
-          echo 4
-          ls ./bin/Release/net7.0 -l
-          echo 5
+          ls ${{ github.workspace }}/publish -l
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: hello-world-package
-          path: ./bin/Release/net7.0/*.*
+          path: ${{ github.workspace }}/publish
           if-no-files-found: error
           retention-days: 7
 
