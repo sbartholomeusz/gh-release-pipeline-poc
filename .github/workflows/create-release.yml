@@ -79,16 +79,6 @@ jobs:
       - name: Publish
         run: dotnet publish ./hello-world.csproj --configuration Release --no-restore --output ${{ env.PUBLISH_PATH }}
 
-      - name: Debug
-        run: |
-          pwd
-          echo 1
-          ls -l
-          echo 2
-          ls ${{ github.workspace }} -l
-          echo 3
-          ls ${{ env.PUBLISH_PATH }} -l
-
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -115,6 +105,16 @@ jobs:
       - name: Set release version
         id: versioner
         run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
+
+      - name: Debug
+        run: |
+          pwd
+          echo 1
+          ls -l
+          echo 2
+          ls ${{ github.workspace }} -l
+          echo 3
+          ls ${{env.RELEASE_DIR}} -l
 
       - name: Publish release
         run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_DIR}}/* --draft --generate-notes
