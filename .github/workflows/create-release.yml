@@ -11,7 +11,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./src
+    working-directory: src
 
 env:
   DOTNET_VERSION: '7.0.x'
