@@ -109,8 +109,6 @@ jobs:
           ls -l
           echo 2
           ls ${{ github.workspace }} -l
-          echo 3
-          ls ${{env.RELEASE_DIR}} -l
 
       - name: Set release version
         id: versioner
