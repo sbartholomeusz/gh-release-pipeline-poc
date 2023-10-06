@@ -94,11 +94,11 @@ jobs:
     needs: package
     runs-on: ubuntu-latest
     env:
-      RELEASE_PACKAGE_DIR: '~/hello-world-package'
-    defaults:
-      run:
-        working-directory: ~/
+      RELEASE_PACKAGE_DIR: '${{ github.workspace }}/hello-world-package'
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
