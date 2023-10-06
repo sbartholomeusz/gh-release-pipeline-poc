@@ -102,10 +102,6 @@ jobs:
           name: hello-world-package
           path: ${{env.RELEASE_DIR}}
 
-      - name: Set release version
-        id: versioner
-        run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
-
       - name: Debug
         run: |
           pwd
@@ -115,6 +111,10 @@ jobs:
           ls ${{ github.workspace }} -l
           echo 3
           ls ${{env.RELEASE_DIR}} -l
+
+      - name: Set release version
+        id: versioner
+        run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
 
       - name: Publish release
         run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_DIR}}/* --draft --generate-notes
