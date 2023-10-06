@@ -94,13 +94,13 @@ jobs:
     needs: package
     runs-on: ubuntu-latest
     env:
-      RELEASE_DIR: '${{ github.workspace }}/hello-world-package'
+      RELEASE_PACKAGE_DIR: '~/hello-world-package'
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: hello-world-package
-          path: ${{env.RELEASE_DIR}}
+          path: ${{env.RELEASE_PACKAGE_DIR}}
 
       - name: Debug
         run: |
@@ -108,13 +108,13 @@ jobs:
           echo 1
           ls -l
           echo 2
-          ls ${{ github.workspace }} -l
+          ls ${{env.RELEASE_PACKAGE_DIR}} -l
 
       - name: Set release version
         id: versioner
         run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
 
       - name: Publish release
-        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_DIR}}/* --draft --generate-notes
+        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_PACKAGE_DIR}}/* --draft --generate-notes
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
