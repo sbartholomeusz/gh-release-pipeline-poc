@@ -95,6 +95,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RELEASE_PACKAGE_DIR: '~/hello-world-package'
+    defaults:
+      run:
+        working-directory: ~/
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
