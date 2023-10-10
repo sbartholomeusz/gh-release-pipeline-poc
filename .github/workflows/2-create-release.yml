@@ -83,11 +83,16 @@ jobs:
           echo 2
           ls ${{env.RELEASE_PACKAGE_DIR}} -l
 
-      - name: Set release version
+      - name: Increment release version
         id: versioner
         run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
 
-      - name: Create draft release
-        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_PACKAGE_DIR}}/* --generate-notes
+      # - name: Publish release
+      #   run: gh release create v${{ steps.versioner.outputs.new_ver_number }} ${{env.RELEASE_PACKAGE_DIR}}/* --generate-notes
+      #   env:
+      #     GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
+
+      - name: Publish release
+        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} --generate-notes
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
