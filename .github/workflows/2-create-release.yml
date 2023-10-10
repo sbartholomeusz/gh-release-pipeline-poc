@@ -4,13 +4,12 @@ on:
   # Run workflow manually
   workflow_dispatch:
 
-  push:
-    branches:
-      - master
-  
-  pull_request:
-    branches: 
-      - master
+  # Only run if prior workflow was successful
+  workflow_run:
+    workflows: ["run-tests"]
+    branches: ["main"]
+    types:
+      - completed
 
 defaults:
   run:
