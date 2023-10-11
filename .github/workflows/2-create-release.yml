@@ -92,6 +92,8 @@ jobs:
       #     GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
 
       - name: Publish release
-        run: gh release create v${{ steps.versioner.outputs.new_ver_number }} --generate-notes
+        run: |
+          version=v${{ steps.versioner.outputs.new_ver_number }}
+          gh release create ${version} --title ${version}
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
