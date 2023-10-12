@@ -23,6 +23,8 @@ env:
 
 jobs:   
   build:
+    # Run only if prev workflow ran successfully
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       NUGET_PACKAGE_PATH: './nupkg'
