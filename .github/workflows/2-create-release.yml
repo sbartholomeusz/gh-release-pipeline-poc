@@ -87,18 +87,11 @@ jobs:
 
       - name: Increment release version
         id: versioner
-        run: echo "{new_ver_number}={$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER}" >> $GITHUB_STATE
-
-      # - name: Publish release
-      #   run: |
-      #     version=x${{ steps.versioner.outputs.new_ver_number }}
-      #     gh release create ${version} ${{env.RELEASE_PACKAGE_DIR}}/* --title ${version} --generate-notes
-      #   env:
-      #     GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
+        run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
 
       - name: Publish release
         run: |
           version=v${{ steps.versioner.outputs.new_ver_number }}
-          gh release create ${version} --title ${version}  --generate-notes
+          gh release create ${version} --title ${version} --generate-notes
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
