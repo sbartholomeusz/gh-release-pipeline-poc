@@ -39,12 +39,13 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget
-
-      - name: Restore dependencies
-        run: dotnet restore
-
+      
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        uses: sbartholomeusz/gh-actions-common/src/dotnet-build@main
+        with:
+          dotnet_version: '6.x'
+          project_path: '.'
+          
 
       - name: Test
         run: dotnet test --configuration Release --no-build
