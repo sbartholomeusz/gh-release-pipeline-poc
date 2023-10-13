@@ -48,4 +48,6 @@ jobs:
           
 
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        uses: sbartholomeusz/gh-actions-common/src/dotnet-test@main
+        with:
+          dotnet_version: '6.x'
