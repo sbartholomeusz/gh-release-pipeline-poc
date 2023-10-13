@@ -44,7 +44,7 @@ jobs:
         uses: sbartholomeusz/gh-actions-common/src/dotnet-build@main
         with:
           dotnet_version: '6.x'
-          project_path: '.'
+          project_path: './src/'
           
 
       - name: Test
