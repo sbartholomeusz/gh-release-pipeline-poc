@@ -26,14 +26,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Test
-        uses: sbartholomeusz/gh-actions-common/src/dotnet-test@main
+        uses: sbartholomeusz/gh-actions-common/src/dotnet/build.yml@main
         with:
           dotnet_version: '6.x'
           path: './src/hello-world.sln'
