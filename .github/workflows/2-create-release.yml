@@ -16,10 +16,6 @@ defaults:
     shell: bash
     working-directory: src
 
-env:
-  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GH_ACCOUNT_NAME: ${{ github.repository_owner }}
-
 jobs:   
   build:
     # Run only if prev workflow ran successfully
@@ -32,79 +28,3 @@ jobs:
   release:
     needs: build
     uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-release.yml@main
-
-  # build:
-  #   # Run only if prev workflow ran successfully
-  #   if: ${{ github.event.workflow_run.conclusion == 'success' }}
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     NUGET_PACKAGE_PATH: './nupkg'
-  #     PUBLISH_PATH: '${{ github.workspace }}/publish'
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-        
-  #     - name: Setup dotnet
-  #       uses: actions/setup-dotnet@v3
-  #       with:
-  #         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-  #     - name: Cache packages
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ~/.nuget/packages
-  #         # Look to see if there is a cache hit for the corresponding requirements file
-  #         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-nuget
-
-  #     - name: Restore dependencies
-  #       run: dotnet restore
-
-  #     - name: Build
-  #       run: dotnet publish ./hello-world.csproj --configuration Release --no-restore --output ${{ env.PUBLISH_PATH }}
-
-  #     - name: Upload build artifacts
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: hello-world-package
-  #         path: ${{ env.PUBLISH_PATH }}
-  #         if-no-files-found: error
-  #         retention-days: 7
-
-  # publish:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     # Required to publish release artifacts
-  #     contents: write
-  #   env:
-  #     RELEASE_PACKAGE_DIR: '${{ github.workspace }}/hello-world-package'
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
-
-  #     - name: Download build artifacts
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: hello-world-package
-  #         path: ${{env.RELEASE_PACKAGE_DIR}}
-
-  #     - name: Debug
-  #       run: |
-  #         pwd
-  #         echo 1
-  #         ls -l
-  #         echo 2
-  #         ls ${{env.RELEASE_PACKAGE_DIR}} -l
-
-  #     - name: Increment release version
-  #       id: versioner
-  #       run: echo "::set-output name=new_ver_number::$(date +'%-Y.%-m.%-d').$GITHUB_RUN_NUMBER"
-
-  #     - name: Publish release
-  #       run: |
-  #         version=v${{ steps.versioner.outputs.new_ver_number }}
-  #         gh release create ${version} --title ${version} --generate-notes
-  #       env:
-  #         GITHUB_TOKEN: ${{ env.GITHUB_ACCESS_TOKEN }}
