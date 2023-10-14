@@ -22,7 +22,7 @@ env:
 
 jobs:
   test:
-    uses: sbartholomeusz/gh-actions-common/.github/workflows/test.yml@main
+    uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-test.yml@main
     with:
       dotnet_version: '6.x'
       path: './src/hello-world.sln'
