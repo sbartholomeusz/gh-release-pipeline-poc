@@ -23,7 +23,7 @@ jobs:
     uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-build.yml@main
     with:
       dotnet_version: '7.0.x'
-      path: './src/hello-world.sln'
+      project_path: './src/hello-world.csproj'
 
   release:
     needs: build
