@@ -22,13 +22,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Test
-        uses: sbartholomeusz/gh-actions-common/.github/workflows/build.yml@main
-        with:
-          dotnet_version: '6.x'
-          path: './src/hello-world.sln'
+    uses: sbartholomeusz/gh-actions-common/.github/workflows/build.yml@main
+    with:
+      dotnet_version: '6.x'
+      path: './src/hello-world.sln'
