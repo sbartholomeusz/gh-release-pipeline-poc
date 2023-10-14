@@ -17,12 +17,13 @@ defaults:
 
 env:
   DOTNET_VERSION: '7.0.x'
-  GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GH_ACCOUNT_NAME: ${{ github.repository_owner }}
 
 jobs:
   test:
-    uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-test.yml@main
-    with:
-      dotnet_version: '6.x'
-      path: './src/hello-world.sln'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-test.yml@main
+        with:
+          dotnet_version: ${{ env.DOTNET_VERSION }}
+          path: './src/hello-world.sln'
