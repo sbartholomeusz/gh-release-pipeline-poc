@@ -31,15 +31,9 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      
-      - name: Build
-        uses: sbartholomeusz/gh-actions-common/src/dotnet-build@main
-        with:
-          dotnet_version: '6.x'
-          project_path: './src/hello-world.csproj'
           
-
       - name: Test
         uses: sbartholomeusz/gh-actions-common/src/dotnet-test@main
         with:
           dotnet_version: '6.x'
+          path: './src/hello-world.sln'
