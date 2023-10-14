@@ -15,15 +15,9 @@ defaults:
     shell: bash
     working-directory: src
 
-env:
-  DOTNET_VERSION: '7.0.x'
-  GH_ACCOUNT_NAME: ${{ github.repository_owner }}
-
 jobs:
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-test.yml@main
-        with:
-          dotnet_version: ${{ env.DOTNET_VERSION }}
-          path: './src/hello-world.sln'
+    uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-test.yml@main
+    with:
+      dotnet_version: '7.0.x'
+      path: './src/hello-world.sln'
