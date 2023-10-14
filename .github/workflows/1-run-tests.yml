@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
           
       - name: Test
-        uses: sbartholomeusz/gh-actions-common/src/dotnet/build.yml@main
+        uses: sbartholomeusz/gh-actions-common/.github/workflows/build.yml@main
         with:
           dotnet_version: '6.x'
           path: './src/hello-world.sln'
