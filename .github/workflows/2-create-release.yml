@@ -24,3 +24,4 @@ jobs:
       # Required to publish release artifacts
       contents: write
     uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-release.yml@main
+    secrets: inherit

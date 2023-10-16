@@ -7,6 +7,9 @@ on:
   # PR for any branch
   pull_request:
 
+  # Staged PR's for any branch
+  merge_group:
+
   # push on any branch
   push:
 
@@ -21,3 +24,4 @@ jobs:
     with:
       dotnet_version: '7.0.x'
       path: './src/hello-world.sln'
+    secrets: inherit
