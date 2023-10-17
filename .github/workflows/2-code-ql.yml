@@ -1,0 +1,31 @@
+name: code-ql
+
+on:
+  # Run workflow manually
+  workflow_dispatch:
+
+  # Only run if prior workflow was successful
+  workflow_run:
+    workflows: ["run-tests"]
+    branches: []
+    types:
+      - completed
+
+defaults:
+  run:
+    shell: bash
+    working-directory: src
+
+jobs:   
+  release:
+    # Run only if prev workflow ran successfully
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-code-ql.yml@main
+    secrets: inherit
+    with:
+      dotnet_version: '7.0.x'
+      project_path: './src/hello-world.csproj'
