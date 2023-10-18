@@ -1,15 +1,18 @@
-name: code-ql
+name: "CodeQL"
 
 on:
   # Run workflow manually
   workflow_dispatch:
 
-  # Only run if prior workflow was successful
-  workflow_run:
-    workflows: ["run-tests"]
-    branches: []
-    types:
-      - completed
+  push:
+    branches: [ 'main', 'master' ]
+
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ 'main', 'master' ]
+
+  # schedule:
+  #   - cron: '18 17 * * 4'
 
 defaults:
   run:
@@ -18,8 +21,6 @@ defaults:
 
 jobs:   
   release:
-    # Run only if prev workflow ran successfully
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: read
       contents: read
@@ -28,4 +29,4 @@ jobs:
     secrets: inherit
     with:
       dotnet_version: '7.0.x'
-      project_path: './src'
+      path: './src'
