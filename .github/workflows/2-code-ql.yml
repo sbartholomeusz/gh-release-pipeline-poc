@@ -1,4 +1,4 @@
-name: "CodeQL"
+name: check-code-ql
 
 on:
   # Run workflow manually
