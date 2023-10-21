@@ -4,13 +4,6 @@ on:
   # Run workflow manually
   workflow_dispatch:
 
-  # Only run if prior workflow was successful
-  workflow_run:
-    workflows: ["run-tests"]
-    branches: ["main"]
-    types:
-      - completed
-
 defaults:
   run:
     shell: bash
@@ -18,10 +11,5 @@ defaults:
 
 jobs:   
   release:
-    # Run only if prev workflow ran successfully
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    permissions:
-      # Required to publish release artifacts
-      contents: write
-    uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-release.yml@main
+    uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-release.yml@feature/rework-sem-versioning
     secrets: inherit
