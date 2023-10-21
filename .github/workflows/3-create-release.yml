@@ -16,4 +16,4 @@ jobs:
     #   contents: write
       
     uses: sbartholomeusz/gh-actions-common/.github/workflows/dotnet-release.yml@feature/rework-sem-versioning
-    secrets: inherit
+    #secrets: inherit
